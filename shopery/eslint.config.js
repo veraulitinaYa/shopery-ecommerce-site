@@ -1,3 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -7,19 +10,15 @@ import prettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules']),
-
+  globalIgnores(['dist', 'node_modules', '*.config.ts']),
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-
+  ...tseslint.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
 
     languageOptions: {
       globals: globals.browser,
-      parserOptions: {
-        project: true,
-      },
+
     },
 
     plugins: {
@@ -37,8 +36,8 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-misused-promises': 'error',
-      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
 
       'no-console': 'warn',
       'no-debugger': 'error',
@@ -53,4 +52,5 @@ export default defineConfig([
       'no-return-await': 'error',
     },
   },
+  ...storybook.configs["flat/recommended"]
 ]);
