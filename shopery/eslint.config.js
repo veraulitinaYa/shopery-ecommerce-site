@@ -1,36 +1,56 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
+import prettier from 'eslint-plugin-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'node_modules']),
+
+  js.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
+
     languageOptions: {
       globals: globals.browser,
+      parserOptions: {
+        project: true,
+      },
     },
+
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-
-      prettier: prettierPlugin,
+      prettier,
     },
 
     rules: {
       ...reactHooks.configs.recommended.rules,
 
-      'react-refresh/only-export-components': 'warn',
+      'react-refresh/only-export-components': 'error',
+      'prettier/prettier': 'error',
 
-      'prettier/prettier': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/no-floating-promises': 'error',
+
+      'no-console': 'warn',
+      'no-debugger': 'error',
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'no-duplicate-imports': 'error',
+
+      'eqeqeq': ['error', 'always'],
+      'curly': ['error', 'all'],
+
+      'no-implicit-coercion': 'error',
+      'no-return-await': 'error',
     },
   },
 ]);
